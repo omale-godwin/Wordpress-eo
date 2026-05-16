@@ -18,6 +18,7 @@ dist/
 *.crt
 .env
 wp-config.php
+wp-config copy.php
 # Package files
 *.jar
 /database
