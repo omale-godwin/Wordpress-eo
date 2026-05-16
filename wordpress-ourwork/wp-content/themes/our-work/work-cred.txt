@@ -1,4 +1,0 @@
-site url: https://ourwork.electricoctopus.agency/secret-work-dashboard/
-password: Zg#OpvHqGnCv07VPyvz(AEdF
-user-id: user
-
