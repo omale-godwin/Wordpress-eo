@@ -17,6 +17,7 @@ dist/
 *.log
 *.crt
 .env
+wp-config.php
 # Package files
 *.jar
 
