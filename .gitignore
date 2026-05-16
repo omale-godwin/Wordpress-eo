@@ -20,7 +20,9 @@ dist/
 wp-config.php
 # Package files
 *.jar
-
+/database
+database
+*.sql
 # Maven
 target/
 dist/

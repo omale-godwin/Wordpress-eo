@@ -1,0 +1,1017 @@
+document.addEventListener("DOMContentLoaded", () => {
+// ===============================
+  // B2B STAGE IMAGE SWITCH (UPDATED)
+  // ===============================
+
+  const stageImageMap = {
+    launching: "https://cdn.electricoctopus.agency/electric-octopus/launching.webp",
+    growing: "https://cdn.electricoctopus.agency/electric-octopus/growing.webp",
+    scaling: "https://cdn.electricoctopus.agency/electric-octopus/scaling.webp"
+  };
+
+  const stageCards = document.querySelectorAll(".b2b-stage");
+  const stageImage = document.getElementById("b2b-stage-image");
+
+  // 🔹 NEW: set default stage (fallback-safe)
+  const savedStage =
+    sessionStorage.getItem("b2b_stage") || "launching";
+
+  function setActiveStage(stage) {
+    stageCards.forEach(card => {
+      const isActive = card.dataset.stage === stage;
+      card.classList.toggle("active", isActive);
+    });
+
+    if (stageImageMap[stage]) {
+      stageImage.src = stageImageMap[stage];
+    }
+
+    sessionStorage.setItem("b2b_stage", stage);
+  }
+
+  // 🔹 INIT ON LOAD
+  setActiveStage(savedStage);
+
+  stageCards.forEach(card => {
+    card.addEventListener("click", () => {
+      const stage = card.dataset.stage;
+
+      // prevent unnecessary re-render
+      if (sessionStorage.getItem("b2b_stage") === stage) return;
+
+      stageImage.style.opacity = 0;
+      stageImage.style.transform = "scale(0.96)";
+
+      setTimeout(() => {
+        setActiveStage(stage);
+        stageImage.style.opacity = 1;
+        stageImage.style.transform = "scale(1)";
+      }, 200);
+    });
+  });
+// ===============================
+  // PART 3 → ASSESSMENT TOGGLE
+  // ===============================
+
+  const continueBtn = document.getElementById("part3-continue");
+  const part3Section = document.querySelector(".part3-wrapper");
+  const assessmentSection = document.getElementById("assessment-form3");
+
+  // Safety check (prevents JS errors)
+  if (continueBtn && part3Section && assessmentSection) {
+    continueBtn.addEventListener("click", () => {
+
+      // Optional: ensure a stage is selected
+      const selectedStage =
+        sessionStorage.getItem("b2b_stage") || "launching";
+
+      sessionStorage.setItem("b2b_stage", selectedStage);
+
+      // Toggle visibility
+      part3Section.style.display = "none";
+      assessmentSection.style.display = "block";
+
+      // Smooth UX
+      assessmentSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+  const steps = [
+    {
+      id: 1,
+      type: "ads-flow",
+      label: "KEY REQUIREMENTS",
+      screens: [
+        {
+          key: "crm_tools_pt1",
+          type: "multi",
+          title: "Industries Expertise (Pt-1)",
+          subtitle: "Select all that apply to your business",
+          iconOnly: true,
+          options: [
+            { value: "Telecom", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo1.png" },
+            { value: "Energy & Utility ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo2.png" },
+            { value: "Logistics", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo3.png" },
+            { value: "High Tech ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo4.png" },
+            { value: "Construction ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo5.png" },
+            { value: "Defense & Space ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo6.png" },
+            { value: "Mining", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo7.png" },
+            { value: "Life Sciences", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo8.png" }
+          ]
+        },
+        {
+          key: "crm_tools_pt2",
+          type: "multi",
+          title: "Industries Expertise (Pt-2)",
+          subtitle: "Select all that apply to your business",
+          iconOnly: true,
+          options: [
+            { value: "Healthcare ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo9.png" },
+            { value: "Agriculture  ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo10.png" },
+            { value: "Insurance ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo11.png" },
+            { value: "Automative", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo12.png" },
+            { value: "Life Science & Pharma ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo13.png" },
+            { value: "Capital Markets ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo14.png" },
+            { value: "Manufacturing ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo15.png" },
+            { value: "Oil & Gas ", icon: "https://cdn.electricoctopus.agency/electric-octopus/industry-logo16.png" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 2,
+      type: "ads-flow",
+      label: "KEY REQUIREMENTS",
+      screens: [
+        {
+          key: "advertising",
+          type: "group-multi",
+          title: "What Service are you looking for ? (Pt-1)",
+          subtitle: "Select all that apply to your business",
+          groups: [
+            {
+              heading: "Advertising",
+              options: [
+                "Display Ads",
+                "Native Advertising",
+                "PPC",
+                "Programmatic Advertising",
+                "Retargeting and Remarketing",
+                "Video Marketing"
+              ]
+            },
+            {
+              heading: "Amazon Marketing",
+              options: [
+                "Amazon Advertising",
+                "Amazon SEO"
+              ]
+            }
+          ]
+        },
+        {
+          key: "content_marketing",
+          type: "group-multi",
+          title: "What Service are you looking for ? (Pt-2)",
+          subtitle: "Select all that apply to your business",
+          groups: [
+            {
+              heading: "Content Marketing",
+              options: [
+                "Current Strategy",
+                "Content Syndication",
+                "Copywriting",
+                "Storytelling",
+                "Video Production"
+              ]
+            },
+            {
+              heading: "Data Analytics",
+              options: [
+                "Data Science",
+                "Data Visualisation",
+                "Machine Learning & AI"
+              ]
+            }
+          ]
+        },
+        {
+          key: "marketing_advice",
+          type: "group-multi",
+          title: "What Service are you looking for ? (Pt-3)",
+          subtitle: "Select all that apply to your business",
+          groups: [
+            {
+              heading: "Marketing Advice",
+              options: [
+                "Inbound Marketing",
+                "Lead Generation",
+                "Market Research",
+                "Outbound Marketing"
+              ]
+            },
+            {
+              heading: "Marketing Automation",
+              options: [
+                "Email Marketing",
+               
+              ]
+            },
+             {
+              heading: "Public Relations",
+              options: [
+                "Corporate Communications",
+                "Influencer Marketing"
+               
+              ]
+            }
+
+          ]
+        },
+        {
+          key: "marketing_automation",
+          type: "group-multi",
+          title: "What Service are you looking for ? (Pt-4)",
+          subtitle: "Select all that apply to your business",
+          groups: [
+            {
+              heading: "SEO",
+              options: [
+                "APP Store Optimization",
+                "Backlink Management",
+                "International SEO",
+                "Link Building",
+                "Local SEO",
+                "Mobile SEO",
+                "SEO Consulting",
+                "Search Engine Marketing",
+                "Shopify SEO",
+                "Technical SEO",
+                "Wordpress SEO",
+                "Youtube SEO",
+              ]
+            }
+          ]
+        },
+        {
+          key: "public_relations",
+          type: "group-multi",
+          title: "What Service are you looking for ? (Pt-5)",
+          subtitle: "Select all that apply to your business",
+          groups: [
+            {
+              heading: "Social Media Marketing",
+              options: [
+                "Community Management",
+                "Content Creation",
+                "Facebook Advertising",
+                "Instagram Marketing",
+                "Social Media Monitoring ",
+                "TikTok Influencer",
+                "Twitter Marketing",
+              ]
+            }
+          ]
+        },
+        {
+          key: "public_relations",
+          type: "group-multi",
+          title: "What Service are you looking for ? (Pt-5)",
+          subtitle: "Select all that apply to your business",
+          groups: [
+            {
+              heading: "Web Advertising",
+              options: [
+                "Digital Design",
+                "Graphic Design",
+                "Logo Design",
+                "Product Design",
+                "UX Design",
+                "Web Design",
+                "Website Maintenance",
+                "Wordpress Design",
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 3,
+      type: "project-details",
+      label: "KEY REQUIREMENTS",
+      screen: {
+        title: "Services Required..",
+        fields: {
+          title: {
+            label: "Project title",
+            max: 50,
+            placeholder:
+              'Examples, “I need SEO Audit for my website” “I am looking to hire a paid Ads professional”'
+          },
+          description: {
+            label: "Project description",
+            max: 300,
+            placeholder:
+              "Describe what is your project is about and what kind of help do you need from our agency"
+          }
+        }
+      }
+    },
+    {
+      id: 4,
+      type: "language-flow",
+      screens: [
+        {
+          key: "languages",
+          type: "language-grid",
+          select: "multi",
+          title: "Your preferred language",
+          subtitle: "Select all that apply to your business",
+          options: [
+            "English", "German",
+            "French", "Spanish",
+            "Italian", "Language 6",
+            "Language 7", "Language 8",
+            "Language 9", "Language 10",
+            "Language 11", "Language 12",
+            "Language 13", "Language 14"
+          ]
+        },
+        {
+          key: "language_confirm",
+          type: "language-confirm",
+          title: "Confirm Communication Language",
+          subtitle: "Please confirm before proceeding:",
+          confirmPara: "All communication, project tasks, proposals, and invoicing will be conducted in English. If your deliverables require non-English sales or product copy, please mention that upfront.",
+      
+          checkboxText:
+            "I understand and agree to proceed with English as the primary communication language."
+        }
+      ]
+    },
+    {
+      id: 5,
+      type: "language-flow",
+      screens: [
+        {
+          key: "languages",
+          type: "language-grid",
+          select: "single",
+          title: "How many territory your company is stablished ( Local , Regional ,National or International ) ?",
+          subtitle: "Select all that apply to your business",
+          options: [
+            "1-2", "3-10",
+            "11-25", "26-50",
+            "51 -99", "100+",
+            
+          ]
+        },
+      
+      ]
+    },
+    {
+      id: 6,
+      type: "single",
+      label: "SELECT ALL THAT APPLY",
+      title: "What best describes your greatest challenge?",
+      subtitle: "Select that apply to your business",
+      options: [
+        "I’m having a hard time getting happy customers to leave a review online",
+        "We have a lot of negative reviews of online  and don’t know how to respond to them",
+        "We want to boost the number of online reviews and don’t know how",
+        "I don’t have enough time in my day to reply to online reviews",
+        "Collecting  video testimonials has thus for been inefficient, challenging , or expensive",
+        "I need to manage online business listings more efficiently",
+       
+      ]
+    },
+    {
+      id: 7,
+      type: "language-flow",
+      screens: [
+        {
+          type: "language-grid",
+          select: "single",
+          subtitle: "Select all that apply to your business",
+          groups: [
+            {
+              key: "budget",
+              title: "Monthly Budget",
+              options: [
+                "$10,000 – $25,000",
+                "$25,000 – $50,000",
+                "$50,000 – $75,000",
+                "$75,000 – $100,000",
+                "$50,000+"
+              ]
+            },
+            {
+              key: "duration",
+              title: "Estimated Project Duration",
+              options: [
+                "1–2 weeks",
+                "2–4 weeks",
+                "1–2 months",
+                "2–6 months",
+                "6 months +"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 8,
+      type: "language-flow",
+      screens: [
+        {
+          type: "confirmation",
+          title: "Confirmation",
+          subTitle: "Data Privacy Audit",
+          description:
+            "In order to comply with privacy regulations in the European Union we’ll need you to provide consent before confirming you to our email list:",
+          consents: [
+            {
+              key: "promo_emails",
+              label:
+                "",
+              hint:
+                ""
+            }
+          ],
+          agreementText:
+            "By submitting this form I agree to Electric Octopus",
+          termsText: "Terms of Service",
+          privacyText: "Privacy Policy"
+        }
+      ]
+    }
+
+
+  ];
+
+  let currentStep = 0;
+  let currentSubStep = 0;
+  const answers = {};
+
+  const stepContent = document.getElementById("step-content");
+  const indicator = document.getElementById("step-indicator");
+  const prevBtn = document.getElementById("prev-step");
+  const nextBtn = document.getElementById("next-step");
+
+  function renderStep() {
+
+    const wrapper = document.querySelector(".part3-wrapper");
+    const step = steps[currentStep];
+
+    wrapper.classList.toggle("first-step", currentStep === 0);
+
+    indicator.innerHTML = `${currentStep + 1} / <span class="total-steps">8</span>`;
+    prevBtn.disabled = currentStep === 0;
+
+    let html = "";
+
+    if (step.label) {
+      html += `<span class="part3-step-label">${step.label}</span>`;
+    }
+ /* ---------- NORMAL OPTIONS ---------- */
+    if (step.type === "single" || step.type === "multi") {
+      html += `<div class="options">`;
+       if (step.title) {
+          html += `<h2 class="options-heading mb-0">${step.title}</h2>`;
+        }     
+      step.options.forEach(opt => {
+        const stored = answers[step.id];
+
+        const active =
+          step.type === "single"
+            ? stored === opt
+            : Array.isArray(stored) && stored.includes(opt);
+        // 🔹 ONE heading
+  
+        html += `
+          <button
+            class="commonoption-cls option ${active ? "active" : ""}"
+            data-step="${step.id}"
+            data-key="root"
+            data-type="${step.type}"
+            data-value="${opt}"
+          >
+            ${opt}
+          </button>
+        `;
+      });
+
+      html += `<p class="language-hint mt-0">Select all that apply to your business</p>`;
+      html += `</div>`;
+    }
+
+    if (step.type === "ads-flow") {
+
+      const screen = step.screens[currentSubStep];
+
+      html += `<h2>${screen.title}</h2>`;
+
+      if (screen.subtitle) {
+        html += `<p class="subtitle">${screen.subtitle}</p>`;
+      }
+
+      if (screen.type === "multi" && screen.iconOnly) {
+
+        html += `<div class="icon-grid grid-2">`;
+
+        screen.options.forEach(opt => {
+
+          const active = (answers[step.id]?.[screen.key] || []).includes(opt.value);
+
+          html += `
+            <button
+              class="indudtry-icon-card ${active ? "active" : ""}"
+              data-step="${step.id}"
+              data-key="${screen.key}"
+              data-type="multi"
+              data-value="${opt.value}"
+            >
+              <span class="indus-icon">
+                <img src="${opt.icon}" alt="${opt.value}">
+              </span>
+              <span class="icon-label">${opt.value}</span>
+            </button>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
+     
+      /* ---------- GROUP MULTI (STEP 2) ---------- */
+      if (screen.type === "group-multi") {
+
+          screen.groups.forEach(group => {
+
+            html += `
+              <div class="service-group">
+                <div class="service-heading">${group.heading}</div>
+                <div class="service-options">
+            `;
+
+            const isOdd = group.options.length % 2 !== 0;
+
+            group.options.forEach((opt, index) => {
+
+              const active =
+                (answers[step.id]?.[screen.key] || []).includes(opt);
+
+              const isLastSingle =
+                isOdd && index === group.options.length - 1;
+
+              html += `
+                <button
+                  class="commonoption-cls option ${active ? "active" : ""} ${isLastSingle ? "full-width" : ""}"
+                  data-step="${step.id}"
+                  data-key="${screen.key}"
+                  data-type="multi"
+                  data-value="${opt}"
+                >
+                  ${opt}
+                </button>
+              `;
+            });
+
+            html += `
+                </div>
+              </div>
+            `;
+          });
+        }
+    }
+/* ---------- STEP 3 : PROJECT DETAILS ---------- */
+      if (step.type === "project-details") {
+
+        const data = answers[step.id] || {};
+        const titleVal = data.title || "";
+        const descVal = data.description || "";
+
+        const titleMax = step.screen.fields.title.max;
+        const descMax = step.screen.fields.description.max;
+
+        const titleExceeded = titleVal.length > titleMax;
+        const descExceeded = descVal.length > descMax;
+
+        html += `
+            <div class="project-details-wrap">
+
+              <h2 class="step-title">${step.screen.title}</h2>
+
+              <!-- Project Title -->
+              <label class="field-label">
+                ${step.screen.fields.title.label}
+                <span>(Max ${titleMax} letters)</span>
+              </label>
+
+              <textarea
+                class="project-textarea title-textarea"
+                rows="2"
+                placeholder="${step.screen.fields.title.placeholder}"
+                data-step="${step.id}"
+                data-field="title"
+              >${titleVal}</textarea>
+
+              <div class="error-text title-error" style="display:none;">
+                You have crossed the limit.
+              </div>
+
+              <!-- Project Description -->
+              <label class="field-label">
+                ${step.screen.fields.description.label}
+                <span>(Max ${descMax} letters)</span>
+              </label>
+
+              <textarea
+                class="project-textarea"
+                rows="6"
+                placeholder="${step.screen.fields.description.placeholder}"
+                data-step="${step.id}"
+                data-field="description"
+              >${descVal}</textarea>
+
+              <div class="error-text desc-error" style="display:none;">
+                You have crossed the limit.
+              </div>
+
+            </div>
+          `;
+      }
+    /* ---------- STEP 4 : LANGUAGE FLOW ---------- */
+     if (step.type === "language-flow") {
+      const screen = step.screens[currentSubStep];
+      const stored = answers[step.id]?.languages;
+      const isMulti = screen.select === "multi";
+
+      const selected = isMulti
+        ? (Array.isArray(stored) ? stored : [])
+        : stored;
+
+
+      if (screen.type === "language-grid") {
+        html += `<span class="part3-step-label">KEY REQUIREMENTS</span>`;
+
+        const groups = screen.groups || [
+          {
+            key: screen.key || "languages",
+            title: screen.title,
+            options: screen.options
+          }
+        ];
+
+        groups.forEach(group => {
+          const stored = answers[step.id]?.[group.key];
+          const isMulti = screen.select === "multi";
+
+          const selected = isMulti
+            ? (Array.isArray(stored) ? stored : [])
+            : stored;
+
+          const total = group.options.length;
+          const isOdd = total % 2 !== 0;
+
+          html += `<h2>${group.title}</h2>`;
+          html += `<div class="language-grid">`;
+
+          group.options.forEach((option, index) => {
+            const active = isMulti
+              ? selected.includes(option)
+              : selected === option;
+
+            const isLastSingle = isOdd && index === total - 1;
+
+            html += `
+              <button
+                class="language-btn ${active ? "active" : ""} ${isLastSingle ? "full-width" : ""}"
+                data-step="${step.id}"
+                data-key="${group.key}"
+                data-type="${screen.select}"
+                data-value="${option}">
+                ${option}
+              </button>
+            `;
+          });
+
+          html += `</div>`;
+        });
+
+        html += `<p class="language-hint">${screen.subtitle}</p>`;
+      }
+
+      if (screen.type === "language-confirm") {
+        html += `<div class="language-confirm-card">
+          <h2>${screen.title}</h2>
+          <ul class="selected-language-list">
+            ${selected.length ? selected.map(lang => `<li>${lang}</li>`).join("") : `<li class="muted">No language selected</li>`}
+          </ul>
+          <h3 class="lang-subhead">${screen.subtitle}</h3>
+          <p class="confirm-para">${screen.confirmPara}</p>
+          <label class="checkbox-wrap">
+            <input type="checkbox" data-step="${step.id}" data-key="confirm" ${answers[step.id]?.confirm ? "checked" : ""} />
+            <span>${screen.checkboxText}</span>
+          </label>
+        </div>`;
+      }
+      if (screen.type === "confirmation") {
+      const stored = answers[step.id] || {};
+
+      html += `
+        <span class="part3-step-label">KEY REQUIREMENTS</span>
+        <h2>${screen.title}</h2>
+
+        <h3 class="confirm-subtitle">${screen.subTitle}</h3>
+        <p class="confirm-desc">${screen.description}</p>
+
+        <div class="confirm-consents">
+          ${screen.consents.map(item => `
+            <label class="confirm-checkbox">
+              <input
+                type="checkbox"
+                data-step="${step.id}"
+                data-key="${item.key}"
+                data-required="true"
+                ${stored[item.key] ? "checked" : ""}
+              />
+
+              <span>
+                <strong>I consent to receive promotional emails about your products and services
+                  <br/>We’ll send you occasional emails about promotions, new products, and partnerships</strong>
+                <small>I consent to allow my data to be used to personalize ads<br/>
+                  For example we’ll use this to show more relevant ads and avoid showing you ads for products you’ve already purchased</small>
+              </span>
+            </label>
+          `).join("")}
+        </div>
+
+        <div class="privacy-link">See Privacy Policy</div>
+
+        <label class="confirm-checkbox agreement">
+          <input
+            type="checkbox"
+            data-step="${step.id}"
+            data-key="agreement"
+            data-required="true"
+            ${stored.agreement ? "checked" : ""}
+          />
+
+          <span>
+            ${screen.agreementText}
+            <a href="#">${screen.termsText}</a> and
+            <a href="#">${screen.privacyText}</a>.
+          </span>
+        </label>
+
+        <div class="recaptcha-box">
+          <div class="recaptcha-mock">
+            <input type="checkbox" disabled />
+            <span>I’m not a robot</span>
+            <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" />
+          </div>
+        </div>
+
+        <button
+          class="submit-btn ${stored.agreement ? "active" : "disabled"}"
+          ${stored.agreement ? "" : "disabled"}
+        >
+          SUBMIT
+        </button>
+      `;
+      }
+    }
+
+    stepContent.innerHTML = html;
+
+    stepContent.querySelectorAll("button").forEach(btn => {
+
+      btn.onclick = () => {
+
+        // 🔒 prevent double handling for language buttons
+        if (btn.classList.contains("language-btn")) return;
+
+        const stepId = btn.dataset.step;
+        const key = btn.dataset.key;
+        const type = btn.dataset.type;
+        const value = btn.dataset.value;
+
+        if (key === "root") {
+          if (type === "single") {
+            answers[stepId] = value;
+          } else {
+            const list = Array.isArray(answers[stepId]) ? answers[stepId] : [];
+
+            answers[stepId] = list.includes(value)
+              ? list.filter(v => v !== value)
+              : [...list, value];
+          }
+        } else {
+          answers[stepId] = answers[stepId] || {};
+
+          if (type === "single") {
+            answers[stepId][key] = value;
+          } else {
+            answers[stepId][key] = answers[stepId][key] || [];
+
+            answers[stepId][key].includes(value)
+              ? answers[stepId][key] = answers[stepId][key].filter(v => v !== value)
+              : answers[stepId][key].push(value);
+          }
+        }
+
+
+        renderStep();
+      };
+    });
+
+  }
+/* =========================
+   Textarea LISTENER (ADD HERE)
+========================= */
+document.addEventListener("input", e => {
+
+  if (!e.target.dataset.step) return;
+
+  const stepId = Number(e.target.dataset.step);
+  const step = steps.find(s => s.id === stepId);
+  
+  // Handle contact form inputs
+  if (step && step.type === "contact-form") {
+    const field = e.target.dataset.field;
+    const value = e.target.value;
+    
+    if (!answers[stepId]) answers[stepId] = {};
+    answers[stepId][field] = value;
+    return;
+  }
+
+  // Handle textarea inputs (project details)
+  const field = e.target.dataset.field;
+
+  const max = step.screen.fields[field].max;
+
+  let value = e.target.value;
+
+  // 🔒 HARD STOP
+  if (value.length > max) {
+    value = value.slice(0, max);
+    e.target.value = value; // overwrite extra input
+  }
+
+  if (!answers[stepId]) answers[stepId] = {};
+  answers[stepId][field] = value;
+
+  const exceeded = value.length >= max;
+
+  // Toggle error class
+  e.target.classList.toggle("error", exceeded);
+
+  // Toggle error text
+  const errorEl = field === "title"
+    ? document.querySelector(".title-error")
+    : document.querySelector(".desc-error");
+
+  if (errorEl) {
+    errorEl.style.display = exceeded ? "block" : "none";
+  }
+});
+
+  // ===============================
+  // LANGUAGE BUTTONS
+  // ===============================
+  document.addEventListener("click", e => {
+    if (!e.target.classList.contains("language-btn")) return;
+
+    const stepId = Number(e.target.dataset.step);
+    const key = e.target.dataset.key;
+    const type = e.target.dataset.type;
+    const value = e.target.dataset.value;
+
+    answers[stepId] = answers[stepId] || {};
+
+    if (type === "single") {
+      answers[stepId][key] = value;
+    } else {
+      const arr = answers[stepId][key] || [];
+      answers[stepId][key] = arr.includes(value)
+        ? arr.filter(v => v !== value)
+        : [...arr, value];
+    }
+
+    renderStep();
+  });
+
+  // ===============================
+  // CHECKBOX CHANGE
+  // ===============================
+  // document.addEventListener("change", e => {
+  //   if (!e.target.dataset.key) return;
+
+  //   const stepId = Number(e.target.dataset.step);
+  //   const key = e.target.dataset.key;
+
+  //   if (!answers[stepId]) answers[stepId] = {};
+  //   answers[stepId][key] = e.target.checked;
+  // });
+document.addEventListener("change", function (e) {
+  if (!e.target.closest(".confirm-checkbox")) return;
+
+  const submitBtn = document.querySelector(".submit-btn");
+  if (!submitBtn) return;
+
+  const allCheckboxes = document.querySelectorAll(
+    '.confirm-checkbox input[type="checkbox"]'
+  );
+
+  const allChecked = [...allCheckboxes].every(cb => cb.checked);
+
+  submitBtn.disabled = !allChecked;
+  submitBtn.classList.toggle("active", allChecked);
+  submitBtn.classList.toggle("disabled", !allChecked);
+});
+// Submit form and redirect
+document.addEventListener("click", function (e) {
+  const submitBtn = e.target.closest(".submit-btn");
+  if (!submitBtn) return;
+
+  // Prevent click if disabled
+  if (submitBtn.disabled) return;
+  // Prevent default button behavior
+  e.preventDefault();
+
+  // OPTIONAL: log final payload
+  console.log("FINAL ANSWERS:", answers);
+  console.log("STEP 9 DATA:", answers[9]);
+  console.log("B2B Stage:", sessionStorage.getItem('b2b_stage'));
+  console.log("AJAX URL:", tte_ajax.ajax_url);
+  console.log("Nonce:", tte_ajax.nonce);
+
+  // Get B2B stage from sessionStorage
+  const b2bStage = sessionStorage.getItem('b2b_stage') || 'launching';
+  
+  // Prepare form data
+  const formData = new FormData();
+  formData.append('action', 'eo_submit_form');
+  formData.append('nonce', tte_ajax.nonce);
+  formData.append('formData', JSON.stringify(answers));
+  formData.append('b2bStage', b2bStage);
+
+  console.log("Submitting form data...");
+
+  // Send AJAX request
+  fetch(tte_ajax.ajax_url, {
+    method: 'POST',
+    body: formData,
+  })
+    .then(response => {
+      console.log("Response status:", response.status);
+      return response.json();
+    })
+    .then(data => {
+      console.log("Response data:", data);
+      if (data.success) {
+        console.log('Form submitted successfully:', data.data);
+        // Redirect after successful submission
+        window.location.href = "http://localhost/electric-octopus-wp/?page_id=86";
+      } else {
+        console.error('Form submission failed:', data.data);
+        alert('Error submitting form: ' + (data.data || 'Unknown error'));
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+      alert('Error submitting form. Please try again. Details: ' + error.message);
+    });
+});
+
+  prevBtn.onclick = () => {
+
+    const step = steps[currentStep];
+
+    if ((step.type === "ads-flow" || step.type === "language-flow") && currentSubStep > 0) {
+      currentSubStep--;
+      renderStep();
+      return;
+    }
+    if (currentStep > 0) {
+      currentStep--;
+      renderStep();
+    }
+  };
+
+  nextBtn.onclick = () => {
+
+    const step = steps[currentStep];
+
+    if (step.type === "ads-flow") {
+
+      if (currentSubStep < step.screens.length - 1) {
+        currentSubStep++;
+        renderStep();
+        return;
+      } else {
+        currentSubStep = 0;
+      }
+    }
+    if (step.type === "language-flow") {
+      if (currentSubStep < step.screens.length - 1) {
+        currentSubStep++;
+        renderStep();
+        return;
+      } else {
+        currentSubStep = 0;
+      }
+    }
+
+    currentStep++;
+    renderStep();
+  };
+
+  renderStep();
+});
