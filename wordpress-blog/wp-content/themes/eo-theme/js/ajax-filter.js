@@ -1,0 +1,94 @@
+jQuery(document).ready(function ($) {
+    let selectedTags = [];
+
+    function fetchPosts() {
+        const filters = {
+            action: "filter_articles",
+            category_slug: $("#custom-category-dropdown").val(),
+            industry_slug: $("#custom-industry-dropdown").val(),
+            search: $("#search-input").val().trim(),
+        };
+
+        $.ajax({
+            url: ajax_filter_params.ajax_url,
+            type: "POST",
+            data: filters,
+            beforeSend: function () {
+                $("#filtered-posts").html("<p class='white'>Loading...</p>");
+            },
+            success: function (response) {
+                $("#filtered-posts").html(response);
+                updateTags(); // Ensure tags are updated after content loads
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", status, error);
+                console.log("Response:", xhr.responseText);
+                $("#filtered-posts").html("<p>An error occurred while fetching posts.</p>");
+            },
+        });
+    }
+
+    // Function to update enabled/disabled tags based on visible posts
+    function updateTags() {
+        let selectedCategory = $("#custom-category-dropdown").val();
+        let selectedIndustry = $("#custom-industry-dropdown").val();
+        let searchQuery = $("#search-input").val().trim().toLowerCase();
+        
+        // Reset all tags to disabled initially
+        $(".custom-tag-link").removeClass("enabled").addClass("disabled-tag");
+        
+        let visibleTags = new Set();
+        
+        // Enable relevant tags only if any filter is applied
+        if (selectedCategory || selectedIndustry || searchQuery.length > 0) {
+            $("#filtered-posts .grid-item:visible").each(function () {
+                $(this).find(".custom-tag-link").each(function () {
+                    let tagID = $(this).data("tag-id");
+                    visibleTags.add(tagID); // Collect all the visible tag IDs
+                });
+            });
+
+            // Enable only the tags that exist in the visible posts
+            $(".articles-tags .custom-tag-link").each(function () {
+                let tagID = $(this).data("tag-id");
+                if (visibleTags.has(tagID)) {
+                    $(this).removeClass("disabled-tag").addClass("enabled");
+                }
+            });
+        }
+    }
+
+    // Auto-submit filter when dropdown or input changes
+    $("#custom-category-dropdown, #custom-industry-dropdown").on("change", fetchPosts);
+    $("#search-input").on("input", fetchPosts);
+
+    // Handle tag selection (visual only)
+    $(document).on("click", ".custom-tag-link.enabled", function () {
+        const tagID = $(this).data("tag-id");
+
+        if (selectedTags.includes(tagID)) {
+            selectedTags = selectedTags.filter(id => id !== tagID);
+            $(this).removeClass("selected-tag");
+        } else {
+            if (selectedTags.length < 7) {
+                selectedTags.push(tagID);
+                $(this).addClass("selected-tag");
+            } else {
+                alert("You can only select up to 7 tags.");
+            }
+        }
+
+        $(".grid-item .custom-tag-link").each(function () {
+            const tagLinkID = $(this).data("tag-id");
+            $(this).toggleClass("selected-tag", selectedTags.includes(tagLinkID));
+        });
+
+        $(".custom-tag-count").toggleClass("highlighted-tag", selectedTags.length > 2);
+    });
+// 🧾 Form submit triggers fetchPosts (for Enter key or button click)
+$("#search-form").on("submit", function (e) {
+    e.preventDefault();
+    fetchPosts();
+});
+    fetchPosts(); // Initial load
+});
