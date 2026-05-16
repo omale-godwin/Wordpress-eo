@@ -1,0 +1,8 @@
+#template-preview-image {
+    display: block !important;
+    margin-top: 10px;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
