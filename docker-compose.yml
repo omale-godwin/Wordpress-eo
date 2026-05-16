@@ -1,0 +1,194 @@
+
+
+services:
+  ourwork:
+    image: bitnami/wordpress:latest
+    env_file: .env
+    ports:
+      - "9092:8080" 
+      - "9443:8443" 
+    environment:
+      - WORDPRESS_DATABASE_HOST=${MYSQL_HOST}
+      - WORDPRESS_DATABASE_PORT_NUMBER=${PORT}
+      - WORDPRESS_DATABASE_NAME=${MYSQL_DATABASE_OURWORK_PROD}
+      - WORDPRESS_DATABASE_USER=${MYSQL_USER_OURWORK}
+      - WORDPRESS_MULTISITE_FILEUPLOAD_MAXK=210000
+      - WORDPRESS_DATABASE_PASSWORD=${MYSQL_PASSWORD_OURWORK}
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - COMPOSER_HOME=/tmp/composer
+      - WORDPRESS_DATABASE_SSL_ENABLED=true
+      - WORDPRESS_DATABASE_SSL_CA_FILE=/etc/ssl/certs/ca-certificate-3.crt
+    user: root
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - wordpress-network
+    volumes:
+      - ./wordpress-ourwork:/bitnami/wordpress
+      - ./ca-certificate-3.crt:/etc/ssl/certs/ca-certificate-3.crt
+
+
+  blog:
+    image: bitnami/wordpress:latest
+    env_file: .env
+    ports:
+      - "9093:8080"  
+      - "9444:8443"  
+    environment:
+      - WORDPRESS_DATABASE_HOST=${MYSQL_HOST}
+      - WORDPRESS_DATABASE_PORT_NUMBER=${PORT}
+      - WORDPRESS_DATABASE_NAME=${MYSQL_DATABASE_BLOG_PROD}
+      - WORDPRESS_MULTISITE_FILEUPLOAD_MAXK=210000
+      - WORDPRESS_DATABASE_USER=${MYSQL_USER_BLOG}
+      - WORDPRESS_DATABASE_PASSWORD=${MYSQL_PASSWORD_BLOG}
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - COMPOSER_HOME=/tmp/composer
+      - WORDPRESS_DATABASE_SSL_ENABLED=true
+      - WORDPRESS_DATABASE_SSL_CA_FILE=/etc/ssl/certs/ca-certificate-4.crt
+    user: root
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - wordpress-network
+    volumes:
+      - ./wordpress-blog:/bitnami/wordpress
+      - ./ca-certificate-2.crt:/etc/ssl/certs/ca-certificate-4.crt
+
+  insights:
+    image: bitnami/wordpress:latest
+    env_file: .env
+    ports:
+      - "9593:8080" 
+      - "9555:8443" 
+    environment:
+      - WORDPRESS_DATABASE_HOST=${MYSQL_HOST}
+      - WORDPRESS_DATABASE_PORT_NUMBER=${PORT}
+      - WORDPRESS_DATABASE_NAME=${MYSQL_DATABASE_INSIGHTS_PROD}
+      - WORDPRESS_DATABASE_USER=${MYSQL_USER_INSIGHTS}
+      - WORDPRESS_MULTISITE_FILEUPLOAD_MAXK=210000
+      - WORDPRESS_DATABASE_PASSWORD=${MYSQL_PASSWORD_INSIGHTS}
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - WORDPRESS_DATABASE_SSL_ENABLED=true
+      - WORDPRESS_DATABASE_SSL_CA_FILE=/etc/ssl/certs/ca-certificate-4.crt
+    user: root
+    networks:
+      - wordpress-network
+    volumes:
+      - ./wordpress-insights:/bitnami/wordpress
+      - ./ca-certificate-2.crt:/etc/ssl/certs/ca-certificate-4.crt
+
+  mainwebsite:
+    image: bitnami/wordpress:latest
+    env_file: .env
+    ports:
+      - "9096:8080" 
+      - "9446:8443" 
+    environment:
+      - WORDPRESS_DATABASE_HOST=${MYSQL_HOST}
+      - WORDPRESS_DATABASE_PORT_NUMBER=${PORT}
+      - WORDPRESS_DATABASE_NAME=${MYSQL_DATABASE_MAINWEBSITE}
+      - WORDPRESS_DATABASE_USER=${MYSQL_USER_MAINWEBSITE}
+      - WORDPRESS_MULTISITE_FILEUPLOAD_MAXK=210000
+      - WORDPRESS_DATABASE_PASSWORD=${MYSQL_PASSWORD_MAINWEBSITE}
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - COMPOSER_HOME=/tmp/composer
+      - WORDPRESS_DATABASE_SSL_ENABLED=true
+      - WORDPRESS_DATABASE_SSL_CA_FILE=/etc/ssl/certs/ca-certificate-3.crt
+    user: root
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - wordpress-network
+    volumes:
+      - ./wordpress-mainwebsite:/bitnami/wordpress
+      - ./ca-certificate-3.crt:/etc/ssl/certs/ca-certificate-3.crt
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    container_name: database
+    ports:
+      - 8081:80
+    env_file: .env
+    environment:
+      PMA_HOST: '${MYSQL_HOST}'
+      PMA_PORT: 25060
+      PMA_USER: '${MYSQL_USER_DIRECTUS}'
+      # Add the password for the specified PMA_USER
+      PMA_PASSWORD: '${MYSQL_PASSWORD_DIRECTUS}'
+      # Enable SSL for the connection to the DigitalOcean database
+      MYSQL_SSL_CA: '/etc/ssl/certs/ca-certificate-4.crt'
+    volumes:
+      - ./certs/ca-certificate-4.crt:/etc/ssl/certs/ca-certificate-4.crt:ro
+
+
+networks:
+  wordpress-network:
+    driver: bridge
+
+volumes:
+  wordpress-ourwork:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./wordpress-ourwork
+      o: bind
+
+  wordpress-blog:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./wordpress-blog
+      o: bind
+
+  wordpress-mainwebsite:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./wordpress-mainwebsite
+      o: bind
+  
+
+  wordpress-insights:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./wordpress-insights
+      o: bind
+
+  wordpress-hub:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./wordpress-hub
+      o: bind
